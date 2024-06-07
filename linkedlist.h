@@ -18,14 +18,14 @@ public:
 
     LinkedListNode() {
     }
-    LinkedListNode(const T& data) {
+    LinkedListNode(std::shared_ptr<T> data) {
         m_Data = data;
     }
-    // Depending on the type, this accessor could be making a copy.
-    T data() const {   
+
+    std::shared_ptr<T> data() const {   
         return m_Data;
     };
-    void setData(const T& data) {
+    void setData(std::shared_ptr<T> data) {
         m_Data = data;
     }
 
@@ -44,7 +44,7 @@ public:
 
 private:
     // In a better implementation, T might be a std::shared_ptr
-    T m_Data;
+    std::shared_ptr<T> m_Data;
     LinkedListNodePtr m_Previous=nullptr;
     LinkedListNodePtr m_Next=nullptr;
 };
