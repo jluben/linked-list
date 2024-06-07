@@ -306,6 +306,56 @@ TEST(LinkedListTest, RemoveMiddle)
 }
 
 
+TEST(LinkedListTest, RemoveFrontAndBack) 
+{
+    using StringLinkedList = LinkedList<std::string>;
+    std::shared_ptr<StringLinkedList> list(new StringLinkedList());
+
+    EXPECT_EQ(list->front(), nullptr);
+    EXPECT_EQ(list->back(), nullptr);
+
+    // Add Node 1
+    StringLinkedList::Node* node1 = new StringLinkedList::Node("hello");
+    EXPECT_TRUE(list->addBack(node1));
+    
+    EXPECT_EQ(list->front(), node1);
+    EXPECT_EQ(list->back(), node1);
+    
+    // Add Node 2
+    StringLinkedList::Node* node2 = new StringLinkedList::Node("middle");
+    EXPECT_TRUE(list->addBack(node2));
+    
+    EXPECT_EQ(list->front(), node1);
+    EXPECT_EQ(node2->next(), nullptr);
+    EXPECT_EQ(node2->previous(), node1);
+    EXPECT_EQ(list->back(), node2);
+    EXPECT_EQ(node1->next(), node2);
+    
+    // Add Node 3
+    StringLinkedList::Node* node3 = new StringLinkedList::Node("blue");
+    EXPECT_TRUE(list->addBack(node3));
+    
+    EXPECT_EQ(list->front(), node1);
+    EXPECT_EQ(list->back(), node3);
+    EXPECT_EQ(node3->next(), nullptr);
+    EXPECT_EQ(node3->previous(), node2);
+
+
+    // Remove middle node
+    EXPECT_TRUE(list->remove(node1));
+    delete node1;
+    EXPECT_TRUE(list->remove(node3));
+    delete node3;
+    
+    // Verify node 2
+    EXPECT_EQ(list->front(), node2);
+    EXPECT_EQ(list->back(), node2);
+    EXPECT_EQ(list->front()->data(), "middle");
+    EXPECT_EQ(node2->previous(), nullptr);
+    EXPECT_EQ(node2->next(), nullptr);
+}
+
+
 TEST(LinkedListTest, LinearEight) 
 {
     using IntList = LinkedList<int>;
