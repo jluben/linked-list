@@ -172,10 +172,13 @@ TEST(LinkedListTest, Clear)
     StringLinkedList::Node* node2 = new StringLinkedList::Node(string_ptr);
     EXPECT_TRUE(list->addFront(node2));
     
+    EXPECT_EQ(list->size(), 2);
+
     list->clear();
 
     EXPECT_EQ(list->front(), nullptr);
     EXPECT_EQ(list->back(), nullptr);
+    EXPECT_EQ(list->size(), 0);
 }
 
 
@@ -186,8 +189,10 @@ TEST(LinkedListTest, SimpleRemove)
 
     EXPECT_EQ(list->front(), nullptr);
     EXPECT_EQ(list->back(), nullptr);
+    EXPECT_EQ(list->size(), 0);
 
     EXPECT_FALSE(list->remove(nullptr));
+    EXPECT_EQ(list->size(), 0);
 
     /*
     // Ideally this would work; but it has performance implications.
@@ -201,6 +206,7 @@ TEST(LinkedListTest, SimpleRemove)
     StringLinkedList::Node* node1 = new StringLinkedList::Node(string_ptr);
     EXPECT_TRUE(list->addFront(node1));
     
+    EXPECT_EQ(list->size(), 1);
     EXPECT_EQ(list->front(), node1);
     EXPECT_EQ(list->back(), node1);
     EXPECT_EQ(*(node1->data()), "first");
@@ -208,6 +214,7 @@ TEST(LinkedListTest, SimpleRemove)
     list->remove(node1);
     EXPECT_EQ(list->front(), nullptr);
     EXPECT_EQ(list->back(), nullptr);
+    EXPECT_EQ(list->size(), 0);
     
 }
 
@@ -219,6 +226,7 @@ TEST(LinkedListTest, AddFrontAndBackThenRemove)
 
     EXPECT_EQ(list->front(), nullptr);
     EXPECT_EQ(list->back(), nullptr);
+    EXPECT_EQ(list->size(), 0);
 
     // Add Node 1
     std::shared_ptr<std::string> string_ptr(new std::string("first"));
@@ -228,6 +236,7 @@ TEST(LinkedListTest, AddFrontAndBackThenRemove)
     EXPECT_EQ(list->front(), node1);
     EXPECT_EQ(list->back(), node1);
     EXPECT_EQ(*(node1->data()), "first");
+    EXPECT_EQ(list->size(), 1);
     
     // Add Node 2
     string_ptr = std::shared_ptr<std::string>(new std::string("last"));
@@ -240,11 +249,13 @@ TEST(LinkedListTest, AddFrontAndBackThenRemove)
     EXPECT_EQ(list->back(), node2);
     EXPECT_EQ(node1->next(), node2);
     EXPECT_EQ(*(node2->data()), "last");
+    EXPECT_EQ(list->size(), 2);
     
     // Now remove 1
     list->remove(node1);
     EXPECT_EQ(list->front(), node2);
     EXPECT_EQ(list->back(), node2);
+    EXPECT_EQ(list->size(), 1);
     
     EXPECT_EQ(node2->next(), nullptr);
     EXPECT_EQ(node2->previous(), nullptr);
@@ -254,6 +265,7 @@ TEST(LinkedListTest, AddFrontAndBackThenRemove)
     EXPECT_TRUE(list->remove(node2));
     EXPECT_EQ(list->front(), nullptr);
     EXPECT_EQ(list->back(), nullptr);
+    EXPECT_EQ(list->size(), 0);
 }
 
 
@@ -264,6 +276,7 @@ TEST(LinkedListTest, RemoveMiddle)
 
     EXPECT_EQ(list->front(), nullptr);
     EXPECT_EQ(list->back(), nullptr);
+    EXPECT_EQ(list->size(), 0);
 
     // Add Node 1
     std::shared_ptr<std::string> string_ptr(new std::string("hello"));
@@ -272,6 +285,7 @@ TEST(LinkedListTest, RemoveMiddle)
     
     EXPECT_EQ(list->front(), node1);
     EXPECT_EQ(list->back(), node1);
+    EXPECT_EQ(list->size(), 1);
     
     // Add Node 2
     string_ptr = std::shared_ptr<std::string>(new std::string("world"));
@@ -283,6 +297,7 @@ TEST(LinkedListTest, RemoveMiddle)
     EXPECT_EQ(node2->previous(), node1);
     EXPECT_EQ(list->back(), node2);
     EXPECT_EQ(node1->next(), node2);
+    EXPECT_EQ(list->size(), 2);
     
     // Add Node 3
     string_ptr = std::shared_ptr<std::string>(new std::string("blue"));
@@ -293,11 +308,13 @@ TEST(LinkedListTest, RemoveMiddle)
     EXPECT_EQ(list->back(), node3);
     EXPECT_EQ(node3->next(), nullptr);
     EXPECT_EQ(node3->previous(), node2);
+    EXPECT_EQ(list->size(), 3);
 
 
     // Remove middle node
     EXPECT_TRUE(list->remove(node2));
     delete node2;
+    EXPECT_EQ(list->size(), 2);
     EXPECT_EQ(list->front(), node1);
     EXPECT_EQ(list->back(), node3);
     EXPECT_EQ(*(list->front()->data()), "hello");
@@ -306,6 +323,7 @@ TEST(LinkedListTest, RemoveMiddle)
     // Remove node 3
     EXPECT_TRUE(list->remove(node3));
     delete node3;
+    EXPECT_EQ(list->size(), 1);
     EXPECT_EQ(list->front(), node1);
     EXPECT_EQ(list->back(), node1);
     EXPECT_EQ(*(list->front()->data()), "hello");
@@ -325,6 +343,7 @@ TEST(LinkedListTest, RemoveFrontAndBack)
     StringLinkedList::Node* node1 = new StringLinkedList::Node(string_ptr);
     EXPECT_TRUE(list->addBack(node1));
     
+    EXPECT_EQ(list->size(), 1);
     EXPECT_EQ(list->front(), node1);
     EXPECT_EQ(list->back(), node1);
     
@@ -333,6 +352,7 @@ TEST(LinkedListTest, RemoveFrontAndBack)
     StringLinkedList::Node* node2 = new StringLinkedList::Node(string_ptr);
     EXPECT_TRUE(list->addBack(node2));
     
+    EXPECT_EQ(list->size(), 2);
     EXPECT_EQ(list->front(), node1);
     EXPECT_EQ(node2->next(), nullptr);
     EXPECT_EQ(node2->previous(), node1);
@@ -344,6 +364,7 @@ TEST(LinkedListTest, RemoveFrontAndBack)
     StringLinkedList::Node* node3 = new StringLinkedList::Node(string_ptr);
     EXPECT_TRUE(list->addBack(node3));
     
+    EXPECT_EQ(list->size(), 3);
     EXPECT_EQ(list->front(), node1);
     EXPECT_EQ(list->back(), node3);
     EXPECT_EQ(node3->next(), nullptr);
@@ -356,6 +377,8 @@ TEST(LinkedListTest, RemoveFrontAndBack)
     EXPECT_TRUE(list->remove(node3));
     delete node3;
     
+    EXPECT_EQ(list->size(), 1);
+
     // Verify node 2
     EXPECT_EQ(list->front(), node2);
     EXPECT_EQ(list->back(), node2);
@@ -379,6 +402,8 @@ TEST(LinkedListTest, LinearEight)
         EXPECT_TRUE(list->addBack(node));
     }
     
+    EXPECT_EQ(list->size(), 8);
+
     // Verify
     int idx=0;
     IntList::Node* node = list->front();
@@ -408,4 +433,83 @@ TEST(LinkedListTest, LinearEight)
     
     EXPECT_EQ(list->front(), nullptr);
     EXPECT_EQ(list->back(), nullptr);
+}
+
+
+TEST(LinkedListTest, ForwardIterator) 
+{
+    using IntList = LinkedList<int>;
+    std::shared_ptr<IntList> list(new IntList());
+
+    // Insert eight
+    for (auto i=0 ; i < 8 ; ++i) {
+        
+        std::shared_ptr int_ptr = std::shared_ptr<int>(new int);
+        *int_ptr = i;
+        IntList::Node* node = new IntList::Node(int_ptr);
+        EXPECT_TRUE(list->addBack(node));
+    }
+    
+    EXPECT_EQ(list->size(), 8);
+
+    // Verify
+    int index=0;
+    for (auto iter=list->begin() ; iter != list->end() ; ++iter)
+    {
+        std::shared_ptr<int> node = *iter;
+        EXPECT_EQ(*node, index);
+        ++index;
+    }
+    
+    EXPECT_EQ(7, index);    // Verify we walked all the whole list.
+}
+
+
+TEST(LinkedListTest, ReverseIterator) 
+{
+    using IntList = LinkedList<int>;
+    std::shared_ptr<IntList> list(new IntList());
+
+    // Insert eight
+    for (auto i=0 ; i < 8 ; ++i) {
+        
+        std::shared_ptr int_ptr = std::shared_ptr<int>(new int);
+        *int_ptr = i;
+        IntList::Node* node = new IntList::Node(int_ptr);
+        EXPECT_TRUE(list->addBack(node));
+    }
+    
+    EXPECT_EQ(list->size(), 8);
+
+    // Verify
+    int index=7;
+    for (auto iter=list->end() ; iter != list->begin() ; --iter)
+    {
+        std::shared_ptr<int> node = *iter;
+        EXPECT_EQ(*node, index);
+        --index;
+    }
+    
+    EXPECT_EQ(0, index);    // Verify we walked all the whole list.
+}
+
+
+TEST(LinkedListTest, SimpleSubscript) 
+{
+    using IntList = LinkedList<int>;
+    std::shared_ptr<IntList> list(new IntList());
+
+    // Insert eight
+    for (auto i=0 ; i < 8 ; ++i) {
+        
+        std::shared_ptr int_ptr = std::shared_ptr<int>(new int);
+        *int_ptr = i;
+        IntList::Node* node = new IntList::Node(int_ptr);
+        EXPECT_TRUE(list->addBack(node));
+    }
+    
+    
+    EXPECT_EQ(list->front(), (*list)[0]);
+    EXPECT_EQ(nullptr, (*list)[11]);    
+    EXPECT_EQ(list->end(), (*list)[7]);
 }

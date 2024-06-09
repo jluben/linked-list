@@ -58,8 +58,78 @@ public:
     */
     using Node = LinkedListNode<T>;
 
+    /**
+     * @brief This is a bidirectional iterator
+    */
+    template <typename T>
+    class iterator {
+        public:
+            iterator(Node* current) {
+                m_Current = current;
+            }
+            iterator& operator=(const iterator& iter) {
+                m_Current = iter.m_Current;
+                return *this;
+            }
+            bool operator==(const iterator& iter) const {
+                return (m_Current == iter.m_Current);
+            }
+
+            iterator& operator++() {
+                next();
+                return *this;
+            }
+
+            bool next() {
+                if (m_Current) {
+                    Node* next = m_Current->next();
+                    if (next) {
+                        m_Current = next;
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+
+            iterator& operator--() {
+                previous();
+                return *this;
+            }
+
+            bool previous() {
+                if (m_Current) {
+                    Node* prev = m_Current->previous();
+                    if (prev) {
+                        m_Current = prev;
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            std::shared_ptr<T> operator*() {
+                if (m_Current) {
+                    return m_Current->data();
+                }
+
+                return nullptr;
+            }
+        private:
+            Node* m_Current=nullptr;
+    };
+
     ~LinkedList() {
         clear();
+    }
+
+    iterator<T> begin() const {
+        return iterator<T>(m_Front);
+    }
+    iterator<T> end() const {
+        return iterator<T>(m_Back);
     }
 
     void clear() {
@@ -161,6 +231,47 @@ public:
         return false;
     }
     
+    Node* operator[](size_t index) const {
+        size_t current_index = 0;
+        Node* node = m_Front;
+        
+        if (node)
+        {
+            while (node && current_index <= index)
+            {
+                if (current_index == index) {
+                    return node;
+                }
+                node = node->next();
+                ++current_index;
+            }
+        }
+
+        return nullptr;
+    }
+
+    /**
+     * @brief Determine the size of the list.
+     * This takes O(n)
+    */
+    size_t size() const {
+        size_t list_size = 0;
+        Node* node = m_Front;
+        Node* next = nullptr;
+        
+        if (node)
+        {
+            while (node)
+            {
+                next = node->next();
+                ++list_size;
+                node = next;
+            }
+        }
+
+        return list_size;
+    }
+
 private:
     Node* m_Front=nullptr;
     Node* m_Back=nullptr;
